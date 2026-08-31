@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="하나님을 만나며 남기는 기록. 감사와 통독과 필사.">
+<meta name="robots" content="noai, noimageai">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="에셀">
+<meta property="og:description" content="하나님을 만나며 남기는 기록. 감사와 통독과 필사.">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://wkongsoraw-glitch.github.io/eshel/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<title>에셀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap">
+
+<style>
+  /* ═══════════  하늘 토큰  ═══════════ */
+  :root {
+    /* 두 갈래의 색 — 일기는 짙은 물빛, 통독은 노랑 */
+    --h-deep: #1D4E79;   /* 짙은 푸름 */
+    --h-gold: #A97B00;   /* 노랑(글자용은 어둡게 눌러 읽히게) */
+    --h-teal: #2E6E63;   /* 물빛 청록 */
+    --gold-bright: #F2C94C;          /* 노랑(면·표시용) */
+    --gold-wash: rgba(242,201,76,.32);  /* 형광펜 */
+    --accent: var(--h-deep);
+
+    --ground:    #E8F1F8;   /* 연하늘 */
+    --surface:   #FFFFFF;
+    --surface-2: #DCE9F3;
+    --ink:       #16283A;
+    --ink-soft:  #46586B;
+    --ink-faint: #74879B;
+    --rule:      #C6D8E6;
+    --rule-soft: #D8E5EF;
+    --code-bg:   #EDF4FA;
+    --shadow:    0 1px 2px rgba(22,40,58,.05), 0 12px 30px -24px rgba(22,40,58,.45);
+
+    --measure: 38em;
+    --mid:     760px;
+    --wide:    900px;
+
+    --f-display: "Gowun Batang", "Apple SD Gothic Neo", serif;
+    --f-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+    --f-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --h-deep: #85B6E0;
+      --h-gold: #E5BE55;
+      --h-teal: #7FC4B8;
+      --gold-bright: #E5BE55;
+      --gold-wash: rgba(229,190,85,.22);
+      --ground:    #0D1A27;
+      --surface:   #142638;
+      --surface-2: #1B3146;
+      --ink:       #E3EDF6;
+      --ink-soft:  #A6BCD0;
+      --ink-faint: #70889F;
+      --rule:      #24405A;
+      --rule-soft: #1B3146;
+      --code-bg:   #12222F;
+      --shadow:    0 1px 2px rgba(0,0,0,.5), 0 12px 30px -24px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --h-deep: #85B6E0;
+    --h-gold: #E5BE55;
+    --h-teal: #7FC4B8;
+    --gold-bright: #E5BE55;
+    --gold-wash: rgba(229,190,85,.22);
+    --ground:    #0D1A27;
+    --surface:   #142638;
+    --surface-2: #1B3146;
+    --ink:       #E3EDF6;
+    --ink-soft:  #A6BCD0;
+    --ink-faint: #70889F;
+    --rule:      #24405A;
+    --rule-soft: #1B3146;
+    --code-bg:   #12222F;
+    --shadow:    0 1px 2px rgba(0,0,0,.5), 0 12px 30px -24px rgba(0,0,0,.9);
+  }
+
+  /* 지금 펼친 갈래가 페이지의 색을 정한다 */
+  :root[data-hue="deep"] { --accent: var(--h-deep); }
+  :root[data-hue="gold"] { --accent: var(--h-gold); }
+  :root[data-hue="teal"] { --accent: var(--h-teal); }
+
+  .c-deep { --card-hue: var(--h-deep); }
+  .c-gold { --card-hue: var(--h-gold); }
+  .c-teal { --card-hue: var(--h-teal); }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.8;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .progress { position: fixed; inset: 0 0 auto 0; height: 2px; z-index: 50; pointer-events: none; }
+  .progress i { display: block; height: 100%; width: 0; background: var(--gold-bright); }
+
+  /* ═══════════  뼈대  ═══════════ */
+  .shell {
+    max-width: 1320px; margin: 0 auto; padding: 0 28px 140px;
+    display: grid; grid-template-columns: 1fr; gap: 0;
+  }
+  @media (min-width: 1080px) {
+    .shell { grid-template-columns: 260px minmax(0, 1fr); gap: 64px; padding-left: 40px; padding-right: 40px; }
+  }
+
+  .side { display: none; }
+  @media (min-width: 1080px) {
+    .side { display: block; }
+    .side-inner {
+      position: sticky; top: 0; max-height: 100vh; overflow-y: auto;
+      padding: 44px 32px 48px 0; margin-right: -32px;
+      border-right: 1px solid var(--rule); scrollbar-width: thin;
+    }
+  }
+  .side-title {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--f-display); font-weight: 700;
+    font-size: 19px; color: var(--ink); text-decoration: none; line-height: 1.4;
+  }
+  .side-sub {
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: .14em;
+    color: var(--ink-faint); margin: 6px 0 24px;
+  }
+  .vol-nav { display: grid; gap: 1px; padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--rule); }
+  .vol-nav a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px; margin-left: -10px; border-radius: 3px;
+    color: var(--ink-soft); text-decoration: none; font-size: 14px; line-height: 1.4;
+    transition: background .15s, color .15s;
+  }
+  .vol-nav a i { width: 7px; height: 7px; border-radius: 50%; background: var(--card-hue, var(--ink-faint)); flex: none; }
+  .vol-nav a:hover { background: var(--surface-2); color: var(--ink); }
+  .vol-nav a.on { color: var(--ink); font-weight: 600; background: var(--surface-2); }
+
+  .ch-nav { display: grid; gap: 1px; }
+  .ch-nav a {
+    display: grid; grid-template-columns: 52px minmax(0,1fr); gap: 10px; align-items: baseline;
+    padding: 6px 10px 6px 11px; margin-left: -12px;
+    border-left: 2px solid transparent; border-radius: 0 3px 3px 0;
+    color: var(--ink-soft); text-decoration: none; font-size: 13.5px; line-height: 1.5;
+    transition: color .15s, background .15s;
+  }
+  .ch-nav a .n { font-family: var(--f-mono); font-size: 10px; color: var(--ink-faint); }
+  .ch-nav a:hover { color: var(--ink); background: var(--surface-2); }
+  .ch-nav a.on { color: var(--accent); border-left-color: var(--accent); background: var(--surface-2); }
+  .ch-nav a.on .n { color: var(--accent); }
+
+  .doc { min-width: 0; }
+  .vol { display: block; }
+  html.js .vol { display: none; }
+  html.js .vol.on { display: block; }
+
+  /* ═══════════  표지  ═══════════ */
+  .cover {
+    padding: 76px 0 52px; border-bottom: 1px solid var(--rule);
+    display: flex; flex-direction: column; gap: 24px; max-width: var(--wide);
+  }
+  .eyebrow {
+    font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .18em;
+    color: var(--accent);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--rule); max-width: 200px; }
+  .cover h1 {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: clamp(36px, 5vw, 56px); line-height: 1.18; letter-spacing: -.015em;
+    margin: 0; text-wrap: balance;
+  }
+  .h1-orig {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: .36em; font-weight: 400; letter-spacing: .01em;
+    color: var(--ink-faint); white-space: nowrap;
+  }
+  .cover .lede {
+    font-family: var(--f-display); font-size: clamp(17.5px, 1.9vw, 21px);
+    line-height: 1.8; color: var(--ink-soft); max-width: 33em; margin: 0;
+  }
+  .cover-meta {
+    display: flex; flex-wrap: wrap; gap: 10px 30px;
+    font-family: var(--f-mono); font-size: 12px; color: var(--ink-faint); padding-top: 6px;
+  }
+  .cover-meta b { color: var(--ink-soft); font-weight: 500; }
+  .tree-ico { height: auto; flex: none; }
+  .ico-side { width: 26px; }
+  .ico-bar { width: 22px; }
+
+  /* ═══════════  두 갈래 카드  ═══════════ */
+  .cards {
+    display: grid; gap: 16px; max-width: var(--wide); margin: 44px 0 0;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 700px) { .cards { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 980px) { .cards { grid-template-columns: 1fr 1fr 1fr; } }
+  .card {
+    display: flex; flex-direction: column; gap: 9px;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-top: 3px solid var(--card-hue);
+    border-radius: 4px; padding: 22px 22px 20px;
+    text-decoration: none; color: var(--ink);
+    box-shadow: var(--shadow);
+    transition: transform .18s, box-shadow .18s;
+  }
+  .card:hover { transform: translateY(-2px); }
+  .card .num {
+    font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .16em;
+    color: var(--card-hue);
+  }
+  .card h3 { font-family: var(--f-display); font-weight: 700; font-size: 21px; line-height: 1.35; margin: 0; }
+  .card p { font-size: 14.5px; line-height: 1.7; color: var(--ink-soft); margin: 0; max-width: none; }
+  .card .meta {
+    font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint);
+    margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--rule-soft);
+  }
+
+  /* ═══════════  최근 기록 (표지)  ═══════════ */
+  .recent { display: grid; max-width: var(--mid); border-top: 1px solid var(--rule); }
+  .recent a {
+    display: grid; grid-template-columns: 104px 10px minmax(0,1fr); gap: 14px; align-items: baseline;
+    padding: 14px 2px; border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink); text-decoration: none; font-size: 15.5px; line-height: 1.5;
+  }
+  .recent a .d { font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-faint); letter-spacing: .04em; }
+  .recent a i { width: 7px; height: 7px; border-radius: 50%; background: var(--card-hue); flex: none; transform: translateY(-1px); }
+  .recent a:hover { color: var(--accent); }
+
+  /* ═══════════  휴대폰 상단 바  ═══════════ */
+  .topbar { display: none; }
+  @media (max-width: 1079px) {
+    .topbar {
+      display: block; position: sticky; top: 0; z-index: 40;
+      background: var(--ground); border-bottom: 1px solid var(--rule);
+    }
+    .topbar-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 9px 20px 7px;
+    }
+    .topbar-title {
+      display: flex; align-items: center; gap: 11px; min-width: 0;
+      color: var(--ink); text-decoration: none;
+    }
+    .topbar-name {
+      font-family: var(--f-display); font-weight: 700; font-size: 15px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .toc-btn {
+      flex: none; display: flex; align-items: center; gap: 8px; cursor: pointer;
+      font-family: var(--f-body); font-size: 13px; font-weight: 500; color: var(--ink);
+      background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 15px;
+    }
+    .toc-btn span.bars { display: block; width: 13px; height: 9px; border-top: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; position: relative; }
+    .toc-btn span.bars::after { content: ""; position: absolute; left: 0; top: 3px; width: 100%; height: 1.5px; background: currentColor; }
+    .chips { display: flex; gap: 7px; overflow-x: auto; padding: 0 20px 9px; scrollbar-width: none; }
+    @media (max-height: 500px) { .chips { display: none; } }
+    .chips::-webkit-scrollbar { display: none; }
+    .chips a {
+      flex: none; display: flex; align-items: center; gap: 7px; white-space: nowrap;
+      font-size: 13px; text-decoration: none; color: var(--ink-soft);
+      background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 14px;
+    }
+    .chips a i { width: 6px; height: 6px; border-radius: 50%; background: var(--card-hue); flex: none; }
+    .chips a.on { color: var(--ink); font-weight: 600; border-color: var(--card-hue); background: var(--surface-2); }
+  }
+
+  /* ═══════════  차례 시트  ═══════════ */
+  .sheet { display: none; position: fixed; inset: 0; z-index: 60; background: var(--ground); overflow-y: auto; }
+  @media (max-width: 1079px) { .sheet.open { display: block; } }
+  .sheet-bar {
+    position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 20px; background: var(--ground); border-bottom: 1px solid var(--rule);
+  }
+  .sheet-bar b { font-family: var(--f-display); font-size: 17px; font-weight: 700; }
+  .sheet-close {
+    cursor: pointer; font-family: var(--f-body); font-size: 13px; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 16px;
+  }
+  .sheet-body { padding: 24px 20px 60px; }
+  .sheet-label {
+    font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .16em;
+    color: var(--ink-faint); margin: 0 0 10px;
+  }
+  .sheet-vols { display: grid; gap: 8px; margin-bottom: 34px; }
+  .sheet-vols a {
+    display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px; background: var(--surface); font-size: 15px;
+  }
+  .sheet-vols a i { width: 7px; height: 7px; border-radius: 50%; background: var(--card-hue); flex: none; }
+  .sheet-vols a.on { border-color: var(--card-hue); background: var(--surface-2); font-weight: 600; }
+  .sheet-chs { display: grid; border-top: 1px solid var(--rule); }
+  .sheet-chs a {
+    display: grid; grid-template-columns: 58px minmax(0,1fr); gap: 12px; align-items: baseline;
+    padding: 14px 2px; min-height: 50px; border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink); text-decoration: none; font-size: 15.5px; line-height: 1.5;
+  }
+  .sheet-chs a .n { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint); }
+
+  /* ═══════════  기록 한 편  ═══════════ */
+  .chapter { padding-top: 88px; scroll-margin-top: 24px; }
+  @media (max-width: 1079px) { .chapter { scroll-margin-top: 112px; } }
+  @media (max-width: 1079px) and (max-height: 500px) { .chapter { scroll-margin-top: 62px; } }
+  .chapter-body { max-width: var(--wide); min-width: 0; }
+  .chapter-eyebrow {
+    font-family: var(--f-mono); font-size: 11px; letter-spacing: .18em;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .chapter h2 {
+    font-family: var(--f-display); font-weight: 700;
+    font-size: clamp(25px, 2.9vw, 33px); line-height: 1.34; letter-spacing: -.01em;
+    margin: 0 0 26px; padding-bottom: 16px; border-bottom: 1px solid var(--rule);
+    max-width: var(--wide); text-wrap: balance;
+  }
+  .chapter h3 {
+    font-family: var(--f-body); font-weight: 600; font-size: 16.5px; letter-spacing: -.005em;
+    margin: 46px 0 14px; color: var(--ink);
+    display: flex; align-items: baseline; gap: 11px; max-width: var(--measure);
+  }
+  .chapter h3::before { content: ""; width: 6px; height: 6px; flex: none; background: var(--gold-bright); transform: translateY(-3px); }
+
+  p { margin: 0 0 20px; max-width: var(--measure); }
+  .chapter-body > p:last-child { margin-bottom: 0; }
+  a { color: var(--accent); text-underline-offset: .18em; }
+  strong { font-weight: 600; color: var(--ink); }
+  em { font-style: normal; font-family: var(--f-display); }
+
+  /* 형광펜 — 가장 강조하고 싶은 말에만 아껴 쓴다 */
+  mark {
+    background: linear-gradient(transparent 55%, var(--gold-wash) 55%);
+    color: inherit; padding: 0 .1em;
+  }
+
+  ul.plain, ol.steps {
+    padding-left: 0; list-style: none; margin: 0 0 22px;
+    display: grid; gap: 11px; max-width: var(--measure);
+  }
+  ul.plain li { padding-left: 19px; position: relative; }
+  ul.plain li::before { content: "—"; position: absolute; left: 0; color: var(--ink-faint); font-family: var(--f-mono); font-size: 13px; }
+  ol.steps { counter-reset: s; gap: 15px; }
+  ol.steps li { counter-increment: s; padding-left: 40px; position: relative; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 0; top: 4px;
+    width: 24px; height: 24px; display: grid; place-items: center;
+    border: 1px solid var(--accent); color: var(--accent); border-radius: 50%;
+    font-family: var(--f-mono); font-size: 11.5px;
+  }
+
+  /* ═══════════  말씀 상자  ═══════════ */
+  .verse {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-left: 3px solid var(--gold-bright);
+    border-radius: 0 4px 4px 0;
+    padding: 20px 24px; margin: 0 0 26px; max-width: var(--mid);
+    box-shadow: var(--shadow);
+  }
+  .verse p {
+    font-family: var(--f-display); font-size: 18px; line-height: 1.9;
+    margin: 0; max-width: none;
+  }
+  .verse .ref {
+    display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em;
+    color: var(--h-gold); margin-top: 12px;
+  }
+
+  /* ═══════════  필사 사진 카드  ═══════════ */
+  .copies {
+    display: grid; gap: 16px; grid-template-columns: 1fr;
+    max-width: var(--wide); margin: 44px 0 0;
+  }
+  @media (min-width: 700px) { .copies { grid-template-columns: 1fr 1fr; } }
+  figure.copy {
+    margin: 0; background: var(--surface);
+    border: 1px solid var(--rule); border-top: 3px solid var(--h-teal);
+    border-radius: 4px; padding: 10px 10px 6px; box-shadow: var(--shadow);
+  }
+  figure.copy img { display: block; width: 100%; height: auto; border-radius: 2px; }
+  figure.copy figcaption {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    padding: 11px 4px 5px;
+  }
+  figure.copy .d { font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint); }
+  figure.copy .src { font-size: 13.5px; font-weight: 600; color: var(--h-teal); text-align: right; }
+
+  /* ═══════════  안내 상자  ═══════════ */
+  .note {
+    border-left: 2px solid var(--accent); background: var(--surface);
+    padding: 18px 22px; margin: 0 0 26px; border-radius: 0 4px 4px 0;
+    font-size: 15.5px; line-height: 1.75; max-width: var(--mid); box-shadow: var(--shadow);
+  }
+  .note p { margin-bottom: 0; max-width: none; }
+  .note .tag {
+    font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .14em;
+    color: var(--accent); display: block; margin-bottom: 8px;
+  }
+  .note.quiet { border-left-color: var(--ink-faint); }
+  .note.quiet .tag { color: var(--ink-faint); }
+
+  /* ═══════════  표  ═══════════ */
+  .table-wrap { overflow-x: auto; margin: 0 0 28px; max-width: var(--wide); border-top: 1px solid var(--rule); }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; line-height: 1.7; min-width: 420px; }
+  th, td { text-align: left; padding: 13px 20px 13px 0; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+  th {
+    font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .14em;
+    color: var(--ink-faint); font-weight: 500;
+    padding-top: 12px; padding-bottom: 10px;
+  }
+  td:first-child { color: var(--ink); }
+
+  /* ═══════════  통독 진행  ═══════════ */
+  .reading {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; max-width: var(--wide);
+  }
+  .reading span {
+    font-family: var(--f-mono); font-size: 12px;
+    border: 1px solid var(--rule); border-radius: 999px; padding: 5px 13px;
+    color: var(--ink-faint); background: var(--surface);
+  }
+  .reading span.done {
+    color: var(--ink); border-color: var(--gold-bright);
+    background: var(--gold-wash);
+  }
+
+  .closing { margin-top: 88px; padding-top: 36px; border-top: 1px solid var(--rule); max-width: var(--measure); }
+  .closing p { font-family: var(--f-display); font-size: 18px; line-height: 1.9; color: var(--ink-soft); max-width: none; }
+
+  a:focus-visible, .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+  ::selection { background: var(--gold-wash); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16.5px; }
+    .shell { padding: 0 20px 100px; }
+    .cover { padding-top: 56px; }
+    .chapter { padding-top: 64px; }
+  }
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add("js");</script>
+
+<div class="progress" aria-hidden="true"><i></i></div>
+
+<header class="topbar">
+  <div class="topbar-row">
+    <a class="topbar-title" href="#cover"><img class="tree-ico ico-bar" src="tree.webp" alt=""><span class="topbar-name">에셀</span></a>
+    <button class="toc-btn" type="button" aria-expanded="false" aria-controls="sheet"><span class="bars"></span>차례</button>
+  </div>
+  <nav class="chips" aria-label="갈래">
+    <a href="#cover" data-vol="v0" class="c-deep"><i></i>표지</a>
+    <a href="#v1" data-vol="v1" class="c-deep"><i></i>감사</a>
+    <a href="#v2" data-vol="v2" class="c-gold"><i></i>통독</a>
+    <a href="#v3" data-vol="v3" class="c-teal"><i></i>필사</a>
+  </nav>
+</header>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-bar">
+    <b>차례</b>
+    <button class="sheet-close" type="button">닫기</button>
+  </div>
+  <div class="sheet-body">
+    <div class="sheet-label">갈래 고르기</div>
+    <nav class="sheet-vols">
+      <a href="#cover" data-vol="v0" class="c-deep"><i></i>표지</a>
+      <a href="#v1" data-vol="v1" class="c-deep"><i></i>감사</a>
+      <a href="#v2" data-vol="v2" class="c-gold"><i></i>통독</a>
+      <a href="#v3" data-vol="v3" class="c-teal"><i></i>필사</a>
+    </nav>
+    <div class="sheet-label sheet-chs-label">이 갈래의 기록</div>
+    <nav class="sheet-chs"></nav>
+  </div>
+</div>
+
+<div class="shell">
+
+<aside class="side">
+  <div class="side-inner">
+    <a class="side-title" href="#cover"><img class="tree-ico ico-side" src="tree.webp" alt="">에셀</a>
+    <div class="side-sub">하나님 만나기 · 2026년부터</div>
+    <nav class="vol-nav" aria-label="갈래">
+      <a href="#cover" data-vol="v0" class="c-deep"><i></i><span>표지</span></a>
+      <a href="#v1" data-vol="v1" class="c-deep"><i></i><span>감사</span></a>
+      <a href="#v2" data-vol="v2" class="c-gold"><i></i><span>통독</span></a>
+      <a href="#v3" data-vol="v3" class="c-teal"><i></i><span>필사</span></a>
+    </nav>
+    <nav class="ch-nav" aria-label="이 갈래의 기록"></nav>
+  </div>
+</aside>
+
+<main class="doc">
+
+<section class="vol" id="v0" data-hue="deep">
+
+  <header class="cover">
+    <div class="eyebrow">하나님 만나기 · 2026년부터</div>
+    <h1>에셀 <span class="h1-orig">(<bdi>אשל</bdi> · eshel)</span></h1>
+    <p class="lede">에셀은 아브라함이 브엘세바에 심은 나무입니다. 하나님을 만나기 시작한 2026년 여름, 그 마음으로 여기에 기록을 심어 봅니다.</p>
+    <div class="verse">
+      <p>아브라함은 브엘세바에 에셀나무를 심고 거기서 영원하신 여호와의 이름을 불렀으며</p>
+      <span class="ref">창세기 21:33</span>
+    </div>
+    <div class="cover-meta">
+      <div><b>시작</b> 2026년 8월 31일</div>
+      <div><b>지금 읽는 책</b> 요한복음</div>
+    </div>
+  </header>
+
+  <div class="cards">
+    <a class="card c-deep" href="#v1" data-vol="v1">
+      <h3>감사</h3>
+      <p>하루에서 받은 것을 하나씩 세어 적습니다.</p>
+      <div class="meta">최근 기록이 맨 위에 온다</div>
+    </a>
+    <a class="card c-gold" href="#v2" data-vol="v2">
+      <h3>통독</h3>
+      <p>말씀을 등불 삼아 한 장씩 걸어갑니다. 요한복음부터 읽습니다.</p>
+      <div class="meta">요한복음 · 전체 21장</div>
+    </a>
+    <a class="card c-teal" href="#v3" data-vol="v3">
+      <h3>필사</h3>
+      <p>말씀을 손으로 옮겨 적고, 사진으로 남깁니다.</p>
+      <div class="meta">적은 종이가 그대로 기록이 된다</div>
+    </a>
+  </div>
+
+  <section class="chapter" id="v0recent">
+    <div class="chapter-body">
+      <div class="chapter-eyebrow">최근 기록</div>
+      <h2>날짜순으로</h2>
+      <div class="recent">
+        <p style="border:0">아직 기록이 없습니다.</p>
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<section class="vol" id="v1" data-hue="deep">
+
+  <header class="cover">
+    <h1>감사</h1>
+    <p class="lede">하루에서 받은 것을 하나씩 세어 적습니다. 최근 기록이 맨 위에 옵니다.</p>
+  </header>
+
+  <!-- ✍ 새 일기는 이 줄 바로 아래에 끼워 넣는다. 최신이 위. -->
+
+  <!-- 틀:
+  <section class="chapter" id="v1-20260907" data-date="2026-09-07">
+    <div class="chapter-body">
+      <div class="chapter-eyebrow">2026.09.07</div>
+      <h2>제목</h2>
+      <p>본문.</p>
+    </div>
+  </section>
+  -->
+
+</section>
+
+<section class="vol" id="v2" data-hue="gold">
+
+  <header class="cover">
+    <h1>통독</h1>
+    <p class="lede">말씀을 등불 삼아 한 장씩 걸어갑니다. 요한복음부터 읽습니다.</p>
+    <div class="cover-meta">
+      <div><b>지금 읽는 책</b> 요한복음 · 전체 21장</div>
+    </div>
+  </header>
+
+  <section class="chapter" id="v2-progress">
+    <div class="chapter-body">
+      <div class="chapter-eyebrow">요한복음</div>
+      <h2>어디까지 읽었나</h2>
+      <p>읽은 장에 노랑이 칠해집니다.</p>
+      <!-- 읽은 장은 class="done"을 붙인다 -->
+      <div class="reading">
+        <span>1장</span><span>2장</span><span>3장</span><span>4장</span><span>5장</span>
+        <span>6장</span><span>7장</span><span>8장</span><span>9장</span><span>10장</span>
+        <span>11장</span><span>12장</span><span>13장</span><span>14장</span><span>15장</span>
+        <span>16장</span><span>17장</span><span>18장</span><span>19장</span><span>20장</span>
+        <span>21장</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✍ 새 통독 기록은 이 줄 바로 아래에 끼워 넣는다. 최신이 위. -->
+  <!-- 틀:
+  <section class="chapter" id="v2-20260901" data-date="2026-09-01">
+    <div class="chapter-body">
+      <div class="chapter-eyebrow">2026.09.01 · 요한복음 1장</div>
+      <h2>요한복음 1장</h2>
+      <div class="verse">
+        <p>붙든 구절을 여기에.</p>
+        <span class="ref">요한복음 1:1</span>
+      </div>
+      <p>읽고 남기는 말.</p>
+    </div>
+  </section>
+  -->
+
+</section>
+
+<section class="vol" id="v3" data-hue="teal">
+
+  <header class="cover">
+    <h1>필사</h1>
+    <p class="lede">말씀을 손으로 옮겨 적습니다. 적은 종이를 사진으로 남깁니다.</p>
+  </header>
+
+  <div class="copies">
+    <!-- ✍ 새 필사는 이 줄 바로 아래에 끼워 넣는다. 최신이 위. -->
+    <!-- 틀:
+    <figure class="copy" id="v3-20260901" data-date="2026-09-01">
+      <img src="필사/2026-09-01.jpg" alt="요한복음 1:1-5 필사" loading="lazy">
+      <figcaption>
+        <span class="d">2026.09.01</span>
+        <span class="src">요한복음 1:1-5</span>
+      </figcaption>
+    </figure>
+    -->
+  </div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  var vols = Array.prototype.slice.call(document.querySelectorAll(".vol"));
+  var volLinks = Array.prototype.slice.call(document.querySelectorAll(".vol-nav a, .chips a, .sheet-vols a"));
+  var sheet = document.getElementById("sheet");
+  var sheetChs = document.querySelector(".sheet-chs");
+  var tocBtn = document.querySelector(".toc-btn");
+  var chNav = document.querySelector(".ch-nav");
+  var bar = document.querySelector(".progress i");
+  var chLinks = [], chSecs = [], ticking = false, current = null;
+
+  function buildChapterNav(vol) {
+    chNav.innerHTML = "";
+    sheetChs.innerHTML = "";
+    chLinks = []; chSecs = [];
+    Array.prototype.forEach.call(vol.querySelectorAll(".chapter"), function (sec) {
+      var h2 = sec.querySelector("h2");
+      if (!h2) return;
+      var date = sec.getAttribute("data-date") || "";
+      var a = document.createElement("a");
+      a.href = "#" + sec.id;
+      a.innerHTML = '<span class="n"></span><span class="t"></span>';
+      a.querySelector(".n").textContent = date ? date.slice(5).replace("-", ".") : "";
+      a.querySelector(".t").textContent = h2.textContent.trim();
+      chNav.appendChild(a);
+      chLinks.push(a); chSecs.push(sec);
+      sheetChs.appendChild(a.cloneNode(true));
+    });
+  }
+
+  function show(id, keepScroll) {
+    var vol = document.getElementById(id) || document.getElementById("v0");
+    if (current === vol) return;
+    current = vol;
+    vols.forEach(function (v) { v.classList.toggle("on", v === vol); });
+    root.setAttribute("data-hue", vol.getAttribute("data-hue") || "deep");
+    volLinks.forEach(function (a) { a.classList.toggle("on", a.getAttribute("data-vol") === vol.id); });
+    buildChapterNav(vol);
+    var lbl = document.querySelector(".sheet-chs-label");
+    if (lbl) lbl.style.display = vol.id === "v0" ? "none" : "";
+    if (!keepScroll) jumpTop();
+    paint();
+  }
+
+  function jumpTop() {
+    var prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    requestAnimationFrame(function () {
+      window.scrollTo(0, 0);
+      root.style.scrollBehavior = prev;
+    });
+  }
+
+  function paint() {
+    ticking = false;
+    var h = document.scrollingElement || document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    if (bar) bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+    var here = -1;
+    for (var i = 0; i < chSecs.length; i++) {
+      if (chSecs[i].getBoundingClientRect().top <= 140) here = i;
+    }
+    for (var j = 0; j < chLinks.length; j++) {
+      var on = j === here;
+      chLinks[j].classList.toggle("on", on);
+      if (on) chLinks[j].setAttribute("aria-current", "true");
+      else chLinks[j].removeAttribute("aria-current");
+    }
+  }
+
+  function fromHash() {
+    var hash = (location.hash || "").replace("#", "");
+    if (!hash || hash === "cover") { show("v0"); return; }
+    var m = hash.match(/^(v\d+)/);
+    var volId = m ? m[1] : "v0";
+    var wasSame = current && current.id === volId;
+    show(volId, wasSame);
+    var target = document.getElementById(hash);
+    if (target && hash !== volId) {
+      requestAnimationFrame(function () {
+        target.scrollIntoView({ behavior: wasSame ? "smooth" : "auto", block: "start" });
+      });
+    } else if (!wasSame) {
+      jumpTop();
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("a[href^='#']") : null;
+    if (!a) return;
+    var hash = a.getAttribute("href").slice(1);
+    var volId = hash === "cover" || !hash ? "v0" : (hash.match(/^(v\d+)/) || [])[1];
+    if (!volId) return;
+    e.preventDefault();
+    closeSheet();
+    var wasSame = current && current.id === volId;
+    show(volId, wasSame);
+    var target = document.getElementById(hash);
+    if (target && hash !== volId) {
+      target.scrollIntoView({ behavior: wasSame ? "smooth" : "auto", block: "start" });
+    } else if (!wasSame) {
+      jumpTop();
+    }
+    try { history.replaceState(null, "", "#" + hash); } catch (err) {}
+    paint();
+  });
+
+  function openSheet() {
+    sheet.classList.add("open");
+    if (tocBtn) tocBtn.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+    sheet.scrollTop = 0;
+  }
+  function closeSheet() {
+    if (!sheet.classList.contains("open")) return;
+    sheet.classList.remove("open");
+    if (tocBtn) tocBtn.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+  if (tocBtn) tocBtn.addEventListener("click", openSheet);
+  var closeBtn = document.querySelector(".sheet-close");
+  if (closeBtn) closeBtn.addEventListener("click", closeSheet);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
+
+  window.addEventListener("hashchange", fromHash);
+  window.addEventListener("scroll", function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(paint); }
+  }, { passive: true });
+  window.addEventListener("resize", paint);
+
+  fromHash();
+})();
+</script>
+</body>
+</html>
